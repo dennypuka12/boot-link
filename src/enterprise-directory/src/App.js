@@ -1,13 +1,29 @@
-import {useState} from "react"
+import {useState, useEffect} from "react";
+import users from "./fakeEmployees.json";
 
-export default function App() {
-  const [query, setQuery] = useState("");
+
+function App() {
+  const [data, setData] = useState(users);
+
+  const loadUsersData = () => {
+     fetch('./fakeEmployees.json')
+    .then((response) => setData(response.data))
+    .catch((err) => console.log(err));
+  };
+
   
+  useEffect(() => {
+    loadUsersData();
+  }, []);
+
+  
+  console.log("data", data);
+
   return (
     <div className="App">
-      <label>Search</label>
-      <input type ="text" onChange={e => setQuery(e.target.value)} />
+      <h2>Hello</h2>
     </div>
   );
 }
 
+export default App;
