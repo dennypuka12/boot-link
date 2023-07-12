@@ -15,6 +15,18 @@ app.get("/api/employees", (req, res) => {
   });
 });
 
+app.get("/api/employees/:name", (req, res) => {
+    console.log('inside employees')
+    dao.findEmployee(req.params.name, (err, employee) => {
+      if (employee) {
+        res.send(employee);
+      } else {
+        res.statusCode = 404;
+        res.end();
+      }
+    });
+  });
+
 // app.get("/api/planets", (req, res) => {
 //   dao.findAllPlanets((err, planets) => {
 //     if (planets) {
