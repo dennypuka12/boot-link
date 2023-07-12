@@ -20,3 +20,17 @@ module.exports.findAllEmployees = async function (callback) {
     }
   });
 };
+
+// retrieve single employee
+module.exports.findEmployee = async function (name, callback) {
+    var col = dbPool.collection("fakeEmployees");
+    col.find({ 'name': { $regex: new RegExp(name, 'i')} }).toArray(async(err, employees) => {
+      if (!err) {
+        console.log({employees})
+        callback(null, employees[0]);
+      } else {
+        callback("Failed to find employee", undefined);
+      }
+    });
+  };
+  
