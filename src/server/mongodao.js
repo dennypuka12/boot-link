@@ -26,6 +26,19 @@ module.exports.findEmployee = async function (name, callback) {
     var col = dbPool.collection("fakeEmployees");
     col.find({ 'name': { $regex: new RegExp(name, 'i')} }).toArray(async(err, employees) => {
       if (!err) {
+        // console.log({employees})
+        callback(null, employees[0]);
+      } else {
+        callback("Failed to find employee", undefined);
+      }
+    });
+  };
+
+// retrievesalary
+module.exports.findEmployeesWithSalaryHigherThan = async function (salary, callback) {
+    var col = dbPool.collection("fakeEmployees");
+    col.find({ salary: { $gt: salary }}).toArray(async(err, employees) => {
+      if (!err) {
         console.log({employees})
         callback(null, employees[0]);
       } else {
@@ -33,4 +46,3 @@ module.exports.findEmployee = async function (name, callback) {
       }
     });
   };
-  

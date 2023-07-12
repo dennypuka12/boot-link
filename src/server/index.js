@@ -27,16 +27,16 @@ app.get("/api/employees/:name", (req, res) => {
     });
   });
 
-// app.get("/api/planets", (req, res) => {
-//   dao.findAllPlanets((err, planets) => {
-//     if (planets) {
-//       res.send(planets);
-//     } else {
-//       res.statusCode = 404;
-//       res.end();
-//     }
-//   });
-// });
+app.get("/api/employees/salary/:salary", (req, res) => {
+  dao.findEmployeesWithSalaryHigherThan(+req.params.salary, (err, salary) => {
+    if (salary) {
+      res.send(salary);
+    } else {
+      res.statusCode = 404;
+      res.end();
+    }
+  });
+});
 
 // app.get("/api/films", (req, res) => {
 //   dao.findAllFilms((err, films) => {
@@ -71,7 +71,7 @@ app.get("/api/employees/:name", (req, res) => {
 //   });
 // });
 
-// app.get("/api/planets/:id", (req, res) => {
+// app.get("/api/salary/:id", (req, res) => {
 //   dao.findPlanet(req.params.id, (err, planet) => {
 //     if (planet) {
 //       res.send(planet);
@@ -93,10 +93,10 @@ app.get("/api/employees/:name", (req, res) => {
 //   });
 // });
 
-// app.get("/api/films/:id/planets", (req, res) => {
-//   dao.findPlanetsByFilm(req.params.id, (err, planets) => {
-//     if (planets) {
-//       res.send(planets);
+// app.get("/api/films/:id/salary", (req, res) => {
+//   dao.findsalaryByFilm(req.params.id, (err, salary) => {
+//     if (salary) {
+//       res.send(salary);
 //     } else {
 //       res.statusCode = 404;
 //       res.end();
@@ -115,7 +115,7 @@ app.get("/api/employees/:name", (req, res) => {
 //   });
 // });
 
-// app.get("/api/planets/:id/films", (req, res) => {
+// app.get("/api/salary/:id/films", (req, res) => {
 //   dao.findFilmsByPlanet(req.params.id, (err, films) => {
 //     if (films) {
 //       res.send(films);
@@ -126,7 +126,7 @@ app.get("/api/employees/:name", (req, res) => {
 //   });
 // });
 
-// app.get("/api/planets/:id/employees", (req, res) => {
+// app.get("/api/salary/:id/employees", (req, res) => {
 //   dao.findemployeesByPlanet(req.params.id, (err, employees) => {
 //     if (employees) {
 //       res.send(employees);
