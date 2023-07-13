@@ -8,8 +8,12 @@ import "./App.css"
 function App() {
 
   const [data, setData] = useState([]);
+<<<<<<< HEAD
   const [searchResults, setSearchResults] = useState([])
   const [seen, setSeen] = useState(false)
+=======
+  const [searchResults, setSearchResults] = useState(null)
+>>>>>>> 8134dda4b14c8c6bda347001978e47c93ab90a5a
 
   useEffect(()=>{
     const fetchData = async()=>{
@@ -28,15 +32,17 @@ function App() {
   }
 
   const handleSearch = (results) => {
-    setSearchResults(results);
+    setSearchResults([results]);
   }
+
+  const tableData = searchResults ? searchResults : data;
 
   return (
     <div className="App">
       <button onClick={tooglePop}>Login</button>
       {seen? <Login toggle={togglePop}/> :null} 
       <SearchBar onSearch={handleSearch}  />
-      <Table data={searchResults.length > 0 ? searchResults : data} />
+      <Table data={tableData} />
     </div>
   );
 }
