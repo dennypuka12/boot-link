@@ -7,8 +7,13 @@ import "./App.css"
 
 function App() {
 
-  const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
+<<<<<<< HEAD
+  const [searchResults, setSearchResults] = useState([])
+  const [seen, setSeen] = useState(false)
+=======
+  const [searchResults, setSearchResults] = useState(null)
+>>>>>>> 8134dda4b14c8c6bda347001978e47c93ab90a5a
 
   useEffect(()=>{
     const fetchData = async()=>{
@@ -18,20 +23,26 @@ function App() {
       }catch (error){
         console.error("Error fetching data from server:", error);
       }
-
     };
-  if (query.length === 0 || query.length > 2) fetchData();
-  }, [query]);
+    fetchData();
+  }, []);
 
-  const onSearch= (searchTerm)=>{
-     console.log('search', searchTerm);
+  function tooglePop(){
+    setSeen(!seen);
   }
+
+  const handleSearch = (results) => {
+    setSearchResults([results]);
+  }
+
+  const tableData = searchResults ? searchResults : data;
 
   return (
     <div className="App">
-      
-    {<SearchBar/>}  
-    {<Table data = {data}/>}
+      <button onClick={tooglePop}>Login</button>
+      {seen? <Login toggle={togglePop}/> :null} 
+      <SearchBar onSearch={handleSearch}  />
+      <Table data={tableData} />
     </div>
   );
 }

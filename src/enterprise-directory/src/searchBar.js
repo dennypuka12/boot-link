@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function SearchBar() {
+function SearchBar(props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchCategories, setSearchCategories] = useState(["Employees", "Locations", "Job Role", "Salaries", "Phone numbers"]);
@@ -13,18 +13,20 @@ function SearchBar() {
         result = await axios.get(`/api/employees/${searchTerm}`);
       } else if (category === "Locations") {
         result = await axios.get(`/api/employees/location/${searchTerm}`);
-      } else if (category === "Job Role") {
-        // Do job role search (you will need to create the appropriate DAO method and API endpoint for this)
-      } else if (category === "Salaries") {
+      }
+        else if (category === "Salaries") {
         result = await axios.get(`/api/employees/salary/${searchTerm}`);
       } else if (category === "Phone numbers") {
         result = await axios.get(`/api/employees/phoneNumber/${searchTerm}`);
       }
-      setSearchResults(result.data);
+      props.onSearch(result.data);
+      console.log(result.data);
     } catch (error) {
       console.error("Error fetching data from server: ", error);
     }
   };
+
+
 
   return (
     <div>
@@ -42,11 +44,11 @@ function SearchBar() {
           ))
         }
       </div>
-      <div>
-        {searchResults.map((result, index) => (
-          <div key={index}>{result.name}</div>
+      {/* <div>
+        {searchResults?.map((result, index) => (
+          <div key={index}>{result}</div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
