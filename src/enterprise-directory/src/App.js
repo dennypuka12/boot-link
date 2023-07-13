@@ -7,9 +7,9 @@ import "./App.css"
 
 function App() {
 
-  const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
   const [searchResults, setSearchResults] = useState([])
+  const [seen, setSeen] = useState(false)
 
   useEffect(()=>{
     const fetchData = async()=>{
@@ -23,12 +23,18 @@ function App() {
     fetchData();
   }, []);
 
+  function tooglePop(){
+    setSeen(!seen);
+  }
+
   const handleSearch = (results) => {
     setSearchResults(results);
   }
 
   return (
     <div className="App">
+      <button onClick={tooglePop}>Login</button>
+      {seen? <Login toggle={togglePop}/> :null} 
       <SearchBar onSearch={handleSearch}  />
       <Table data={searchResults.length > 0 ? searchResults : data} />
     </div>
