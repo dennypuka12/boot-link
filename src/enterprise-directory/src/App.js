@@ -9,6 +9,7 @@ function App() {
 
   const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
+  const [searchResults, setSearchResults] = useState([])
 
   useEffect(()=>{
     const fetchData = async()=>{
@@ -18,20 +19,18 @@ function App() {
       }catch (error){
         console.error("Error fetching data from server:", error);
       }
-
     };
-  if (query.length === 0 || query.length > 2) fetchData();
-  }, [query]);
+    fetchData();
+  }, []);
 
-  const onSearch= (searchTerm)=>{
-     console.log('search', searchTerm);
+  const handleSearch = (results) => {
+    setSearchResults(results);
   }
 
   return (
     <div className="App">
-      
-    {<SearchBar/>}  
-    {<Table data = {data}/>}
+      <SearchBar onSearch={handleSearch}  />
+      <Table data={searchResults.length > 0 ? searchResults : data} />
     </div>
   );
 }

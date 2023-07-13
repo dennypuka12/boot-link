@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Table from "./Table.js"
 
-function SearchBar() {
+function SearchBar(props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchCategories, setSearchCategories] = useState(["Employees", "Locations", "Job Role", "Salaries", "Phone numbers"]);
@@ -20,7 +19,7 @@ function SearchBar() {
       } else if (category === "Phone numbers") {
         result = await axios.get(`/api/employees/phoneNumber/${searchTerm}`);
       }
-      setSearchResults(result.data.data);
+      props.onSearch(result.data);
       console.log(result.data);
     } catch (error) {
       console.error("Error fetching data from server: ", error);
@@ -45,11 +44,11 @@ function SearchBar() {
           ))
         }
       </div>
-      <div>
+      {/* <div>
         {searchResults?.map((result, index) => (
           <div key={index}>{result}</div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
