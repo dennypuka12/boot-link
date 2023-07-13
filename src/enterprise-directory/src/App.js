@@ -9,7 +9,7 @@ function App() {
 
   const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
-  const [searchResults, setSearchResults] = useState([])
+  const [searchResults, setSearchResults] = useState(null)
 
   useEffect(()=>{
     const fetchData = async()=>{
@@ -24,13 +24,15 @@ function App() {
   }, []);
 
   const handleSearch = (results) => {
-    setSearchResults(results);
+    setSearchResults([results]);
   }
+
+  const tableData = searchResults ? searchResults : data;
 
   return (
     <div className="App">
       <SearchBar onSearch={handleSearch}  />
-      <Table data={searchResults.length > 0 ? searchResults : data} />
+      <Table data={tableData} />
     </div>
   );
 }
