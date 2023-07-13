@@ -11,33 +11,47 @@ mongodb.MongoClient.connect(url, function (err, db) {
 });
 
 module.exports.findAllEmployees = async function (callback) {
-  var col = dbPool.collection("fakeEmployeesNew");
-  col.find().toArray(async(err, fakeEmployeesNew) => {
+  var col = dbPool.collection("fakeEmployees");
+  col.find().toArray(async(err, fakeEmployees) => {
     if (!err) {
-      callback(null, fakeEmployeesNew);
+      callback(null, fakeEmployees);
     } else {
-      callback("Failed to find fakeEmployeesNew", undefined);
+      callback("Failed to find fakeEmployees", undefined);
     }
   });
 };
 
 // retrieve single employee
 module.exports.findEmployee = async function (name, callback) {
-    var col = dbPool.collection("fakeEmployeesNew");
+    var col = dbPool.collection("fakeEmployees");
     col.find({ 'name': { $regex: new RegExp(name, 'i')} }).toArray(async(err, employees) => {
       if (!err) {
-        // console.log({employees})
+        console.log({employees})
         callback(null, employees[0]);
       } else {
         callback("Failed to find employee", undefined);
       }
     });
   };
+  
+module.exports.findEmpoyeesByLocation = async function (location, callback) {
+    var col = dbPool.collection('fakeEmployees');
+    col.find({  workLocation: { $regex: new RegExp(location, 'i') } }).toArray(async(err, employees) => {
+    if (!err) {
+            console.log({employees})
+            callback(null, employees[0]);
+          } else {
+            callback("Failed to find employee", undefined);
+          }    
+    });
+  };
 
-// retrievesalary
-module.exports.findEmployeesWithSalaryHigherThan = async function (salary, callback) {
-    var col = dbPool.collection("fakeEmployeesNew");
-    col.find({ salary: { $gt: salary }}).toArray(async(err, employees) => {
+  // retrieve single employee
+module.exports.findEmployeeByPhone = async function (phoneNumber, callback) {
+
+    let cleanedPhoneNumber = phoneNumber.replace(/\D/g, '');
+    var col = dbPool.collection("fakeEmployees");
+    col.find({ 'phoneNumber': { $regex: new RegExp(cleanedPhoneNumber, 'i')} }).toArray(async(err, employees) => {
       if (!err) {
         console.log({employees})
         callback(null, employees[0]);
@@ -47,26 +61,16 @@ module.exports.findEmployeesWithSalaryHigherThan = async function (salary, callb
     });
   };
 
-module.exports.getEmployeeByName = async function (name, callback) {
-    var col = dbPool.collection("fakeEmployeesNew");
-    col.find({ 'name': { $regex: new RegExp(name, 'i')} }).toArray(async(err, employees) => {
+    // retrieve salary info
+module.exports.findEmployeeBySalary = async function (salary, callback) {
+    let fixedSalary = '$' + salary;
+    var col = dbPool.collection("fakeEmployees");
+    col.find({ 'salary': { $gt: fixedSalary } }).toArray(async(err, employees) => {
       if (!err) {
-        if (employees.length > 0) {  // check if employees array is not empty
-          let employee = employees[0];
-          if (employee.managerId) {
-            let manager = await col.find({ 'id': employee.managerId }).toArray();
-            if (!err && manager.length > 0) {
-              employee.managerName = manager[0].name;
-            }
-          }
-          console.log({employee});  // this line should be here
-          callback(null, employee);
-        } else {
-          callback("Employee not found", null);  // callback with an error message if employees array is empty
-        }
+        console.log({employees})
+        callback(null, employees[0]);
       } else {
         callback("Failed to find employee", undefined);
       }
     });
   };
-  
