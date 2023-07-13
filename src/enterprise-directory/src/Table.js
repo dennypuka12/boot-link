@@ -1,5 +1,5 @@
 
-const Table = ({ data }) => {
+const table = ({ data }) => {
     return (
       <table>
         <tbody>
@@ -24,4 +24,4 @@ const Table = ({ data }) => {
     );
   };
   
-  export default Table;
+  export default table;
