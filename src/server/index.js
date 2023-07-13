@@ -27,38 +27,38 @@ app.get("/api/employees/:name", (req, res) => {
     });
   });
 
-// app.get("/api/planets", (req, res) => {
-//   dao.findAllPlanets((err, planets) => {
-//     if (planets) {
-//       res.send(planets);
-//     } else {
-//       res.statusCode = 404;
-//       res.end();
-//     }
-//   });
-// });
+app.get("/api/employees/location/:location", (req, res) => {
+  dao.findEmpoyeesByLocation(req.params.location, (err, employees) => {
+    if (employees) {
+      res.send(employees);
+    } else {
+      res.statusCode = 404;
+      res.end();
+    }
+  });
+});
 
-// app.get("/api/films", (req, res) => {
-//   dao.findAllFilms((err, films) => {
-//     if (films) {
-//       res.send(films);
-//     } else {
-//       res.statusCode = 404;
-//       res.end();
-//     }
-//   });
-// });
+app.get("/api/employees/phone/:phoneNumber", (req, res) => {
+    dao.findEmployeeByPhone(req.params.phoneNumber, (err, employees) => {
+      if (employees) {
+        res.send(employees);
+      } else {
+        res.statusCode = 404;
+        res.end();
+      }
+    });
+  });
 
-// app.get("/api/employees/:id", (req, res) => {
-//   dao.findCharacter(req.params.id, (err, character) => {
-//     if (character) {
-//       res.send(character);
-//     } else {
-//       res.statusCode = 404;
-//       res.end();
-//     }
-//   });
-// });
+app.get("/api/employees/salary/:salary", (req, res) => {
+  dao.findEmployeeBySalary(req.params.salary, (err, employees) => {
+    if (employees) {
+      res.send(employees);
+    } else {
+      res.statusCode = 404;
+      res.end();
+    }
+  });
+});
 
 // app.get("/api/films/:id", (req, res) => {
 //   dao.findFilm(req.params.id, (err, film) => {
