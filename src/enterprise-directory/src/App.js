@@ -2,18 +2,15 @@ import {useEffect, useState} from "react";
 import axios from 'axios';
 import Table from "./Table.js"
 import SearchBar from "./searchBar.js";
+import Login from './login.js'
 import "./App.css"
 
 
 function App() {
 
   const [data, setData] = useState([]);
-<<<<<<< HEAD
-  const [searchResults, setSearchResults] = useState([])
-  const [seen, setSeen] = useState(false)
-=======
   const [searchResults, setSearchResults] = useState(null)
->>>>>>> 8134dda4b14c8c6bda347001978e47c93ab90a5a
+  const [seen, setSeen] = useState(false);
 
   useEffect(()=>{
     const fetchData = async()=>{
@@ -27,7 +24,7 @@ function App() {
     fetchData();
   }, []);
 
-  function tooglePop(){
+  function togglePop(){
     setSeen(!seen);
   }
 
@@ -39,7 +36,7 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={tooglePop}>Login</button>
+      <button onClick={togglePop}>Login</button>
       {seen? <Login toggle={togglePop}/> :null} 
       <SearchBar onSearch={handleSearch}  />
       <Table data={tableData} />
