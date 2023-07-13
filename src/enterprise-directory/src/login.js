@@ -1,3 +1,4 @@
+import {useState} from "react";
 function Login(props) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -15,11 +16,17 @@ function Login(props) {
                 <form onSubmit={handleLogin}>
                     <label>
                         Username:
-                        <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
+                        <input 
+                        type="text" 
+                        value={username} 
+                        onChange={e => setUsername(e.target.value)} />
                     </label>
                     <label>
                         Password:
-                        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                        <input 
+                        type="password" 
+                        value={password} 
+                        onChange={e => setPassword(e.target.value)} />
                     </label>
                     <button type="submit">Login</button>
                 </form>
@@ -28,3 +35,4 @@ function Login(props) {
         </div>
     )
 }
+export default Login;
