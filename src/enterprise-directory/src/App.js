@@ -5,6 +5,7 @@ import SearchBar from "./searchBar.js";
 import "./App.css"
 
 
+
 function App() {
 
   const [query, setQuery] = useState("");

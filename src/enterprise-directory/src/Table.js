@@ -1,3 +1,4 @@
+
 const Table = ({ data }) => {
     return (
       <table>
