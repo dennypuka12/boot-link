@@ -11,19 +11,19 @@ mongodb.MongoClient.connect(url, function (err, db) {
 });
 
 module.exports.findAllEmployees = async function (callback) {
-  var col = dbPool.collection("fakeEmployees");
-  col.find().toArray(async(err, fakeEmployees) => {
+  var col = dbPool.collection("fakeEmployeesNew");
+  col.find().toArray(async(err, fakeEmployeesNew) => {
     if (!err) {
-      callback(null, fakeEmployees);
+      callback(null, fakeEmployeesNew);
     } else {
-      callback("Failed to find fakeEmployees", undefined);
+      callback("Failed to find fakeEmployeesNew", undefined);
     }
   });
 };
 
 // retrieve single employee
 module.exports.findEmployee = async function (name, callback) {
-    var col = dbPool.collection("fakeEmployees");
+    var col = dbPool.collection("fakeEmployeesNew");
     col.find({ 'name': { $regex: new RegExp(name, 'i')} }).toArray(async(err, employees) => {
       if (!err) {
         // console.log({employees})
@@ -36,7 +36,7 @@ module.exports.findEmployee = async function (name, callback) {
 
 // retrievesalary
 module.exports.findEmployeesWithSalaryHigherThan = async function (salary, callback) {
-    var col = dbPool.collection("fakeEmployees");
+    var col = dbPool.collection("fakeEmployeesNew");
     col.find({ salary: { $gt: salary }}).toArray(async(err, employees) => {
       if (!err) {
         console.log({employees})
@@ -46,3 +46,27 @@ module.exports.findEmployeesWithSalaryHigherThan = async function (salary, callb
       }
     });
   };
+
+module.exports.getEmployeeByName = async function (name, callback) {
+    var col = dbPool.collection("fakeEmployeesNew");
+    col.find({ 'name': { $regex: new RegExp(name, 'i')} }).toArray(async(err, employees) => {
+      if (!err) {
+        if (employees.length > 0) {  // check if employees array is not empty
+          let employee = employees[0];
+          if (employee.managerId) {
+            let manager = await col.find({ 'id': employee.managerId }).toArray();
+            if (!err && manager.length > 0) {
+              employee.managerName = manager[0].name;
+            }
+          }
+          console.log({employee});  // this line should be here
+          callback(null, employee);
+        } else {
+          callback("Employee not found", null);  // callback with an error message if employees array is empty
+        }
+      } else {
+        callback("Failed to find employee", undefined);
+      }
+    });
+  };
+  
