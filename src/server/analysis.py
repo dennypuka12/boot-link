@@ -1,59 +1,89 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, mean_squared_error
 import numpy as np
-import os
-import json
-from pymongo import MongoClient
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
+from sklearn.compose import make_column_transformer
 import seaborn as sns
+import joblib
+import pymongo
 
+# Establish a connection to MongoDB
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+db = client["hack"]
+collection = db["fakeEmployeesNew"]
 
-client = MongoClient('mongodb://localhost:27017/')
-db = client['hack']
-collection = db['fakeEmployeesNew']
+# Load the dataset
+employees = pd.DataFrame(list(collection.find()))
 
-data = [doc for doc in collection.find({})]
+# Drop the unnecessary columns
+employees.drop(columns=['_id', 'name', 'phoneNumber', 'role', 'managerId'], inplace=True)
 
-df = pd.DataFrame(data)
+# Define the input variable (X) and output variable (y)
+X = employees.drop(columns='salary')
+y = employees['salary']
 
-# Dropping irrelevant data
-df_model = df.drop(columns=['_id', 'name', 'phoneNumber', 'role', 'managerId'])
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# One hot encode the categorical columns
-df_model = pd.get_dummies(df_model, columns=['jobRole', 'workLocation'])
+# Create a column transformer for one-hot encoding
+preprocessor = make_column_transformer(
+    (OneHotEncoder(handle_unknown='ignore'), ['jobRole', 'workLocation']),
+    remainder='passthrough'
+)
 
-# Splitting Data intro Training Set and Test Set
-X = df_model.drop(columns='salary')
-y = df_model['salary']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
+# Fit the transformer on the training set and transform the training and test sets
+X_train = preprocessor.fit_transform(X_train)
+X_test = preprocessor.transform(X_test)
 
-#Initialize model
+# Train the model
 model = LinearRegression()
 model.fit(X_train, y_train)
 
-#Use model to make predictions for y
+# Save the model and preprocessor
+joblib.dump(model, 'model.pkl')
+joblib.dump(preprocessor, 'preprocessor.pkl')
 
-y_pred = model.predict(X_test)
+def prepare_input_data(jobRole, workLocation):
+    # Initialize a dataframe in the same format as the original data
+    input_data = pd.DataFrame(columns=['jobRole', 'workLocation'])
+    input_data.loc[0, 'jobRole'] = jobRole
+    input_data.loc[0, 'workLocation'] = workLocation
 
-#Error metrics for averages
-mae = mean_absolute_error(y_test, y_pred)
-mse = mean_squared_error(y_test, y_pred)
-rmse = np.sqrt(mse)
+    # Transform the input data using the same transformer as the training data
+    input_data = preprocessor.transform(input_data)
 
-mae, mse, rmse
+    return input_data
 
-#Plotting actual vs predicted
-plt.figure(figsize=(10,6))
-sns.scatterplot(x=y_test, y=y_pred, alpha=0.6)
-plt.xlabel('Actual Salary')
-plt.ylabel('Predicted Salary')
-plt.title('Actual vs Predicted Salary')
-plt.show()
+def predict_salary(jobRole, workLocation):
+    # Prepare the input data
+    input_data = prepare_input_data(jobRole, workLocation)
 
-residuals = y_test - y_pred
-plt.figure(figsize=(10,6))
-sns.histplot(residuals, bins=20, kde=True)
-plt.title('Residuals')
-plt.show()
+    # Use the model to make a prediction
+    salary_prediction = model.predict(input_data)
+
+    # Calculate the error metrics
+    y_pred = model.predict(X_test)
+    mae = mean_absolute_error(y_test, y_pred)
+    mse = mean_squared_error(y_test, y_pred)
+    rmse = np.sqrt(mse)
+
+    return {
+        "predicted_salary": salary_prediction[0],
+        "mae": mae,
+        "mse": mse,
+        "rmse": rmse,
+    }
+
+def create_plots(y_test, y_pred):
+    # Scatter plot
+    plt.scatter(y_test, y_pred)
+    plt.xlabel('True Values')
+    plt.ylabel('Predictions')
+    plt.savefig('scatter_plot.png')
+
+    # Residual plot
+    sns.residplot(y_test, y_pred, lowess=True, color="g")
+    plt.savefig('residuals_plot.png')
