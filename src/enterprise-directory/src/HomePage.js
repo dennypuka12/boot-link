@@ -25,9 +25,13 @@ export const HomePage = () => {
       <header className="App-header">
         Employee Directory
       </header>
-      <Login onLogin={handleLogin} />
-      <SearchBar onSearch={handleSearch} onQuery={handleQuery} />
-      <Table data={Array.isArray(data)  ?   data : []} query={query} role={userRole} />
+      <header className="login">
+        <div className='spacing'>
+          <Login className='center' onLogin={handleLogin} />
+          <SearchBar className='center' onSearch={handleSearch} onQuery={handleQuery} />
+          <Table data={Array.isArray(data)  ?   data : []} query={query} role={userRole} />
+        </div>
+      </header>
     </div>
   );
 };
