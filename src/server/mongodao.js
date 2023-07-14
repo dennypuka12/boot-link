@@ -27,7 +27,7 @@ module.exports.findEmployee = async function (name, callback) {
     col.find({ 'name': { $regex: new RegExp(name, 'i')} }).toArray(async(err, employees) => {
       if (!err) {
         // console.log({employees})
-        callback(null, employees[0]);
+        callback(null, employees);
       } else {
         callback("Failed to find employee", undefined);
       }
@@ -37,10 +37,10 @@ module.exports.findEmployee = async function (name, callback) {
 // retrievesalary
 module.exports.findEmployeesWithSalaryHigherThan = async function (salary, callback) {
     var col = dbPool.collection("fakeEmployeesNew");
-    col.find({ salary: { $gt: salary }}).toArray(async(err, employees) => {
+    col.find({ 'salary': { $gt: salary }}).toArray(async(err, employees) => {
       if (!err) {
         console.log({employees})
-        callback(null, employees[0]);
+        callback(null, employees);
       } else {
         callback("Failed to find employee", undefined);
       }
@@ -81,5 +81,39 @@ module.exports.findEmployeesByLocation = async function (location, callback) {
     } else {
       callback("Failed to find employees by location", undefined);
     }    
+  });
+};
+
+module.exports.findByRoles = async function (role, callback) {
+  var col = dbPool.collection('fakeEmployeesNew');
+  col.find({  jobRole: { $regex: new RegExp(role, 'i') } }).toArray(async(err, employees) => {
+    if (!err) {
+      console.log({employees});
+      callback(null, employees);
+    } else {
+      callback("Failed to find employees by role", undefined);
+    }    
+  });
+};
+
+module.exports.findAllJobRoles = async function (callback)  {
+  var col = dbPool.collection("fakeEmployeesNew");
+  col.distinct("jobRole", (err, jobRoles) => {
+    if (!err) {
+      callback(null, jobRoles);
+    } else {
+      callback("Failed to find job roles", undefined);
+    }
+  });
+};
+
+module.exports.findAllLocations = async function (callback)  {
+  var col = dbPool.collection("fakeEmployeesNew");
+  col.distinct("workLocation", (err, locations) => {
+    if (!err) {
+      callback(null, locations);
+    } else {
+      callback("Failed to find job roles", undefined);
+    }
   });
 };

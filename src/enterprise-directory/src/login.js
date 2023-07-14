@@ -15,7 +15,15 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onLogin(username, password);
+
+    fetch(`/api/login/${username}`)
+    .then(response => response.json())
+    .then(data => { 
+        onLogin(data.name, data.role);
+    })
+    .catch(error => {
+        console.error('Error:', error)
+    })
   };
 
   return (
