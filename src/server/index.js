@@ -45,13 +45,26 @@ app.get('/api/login/:name', async (req, res) => {
   const name = req.params.name;
   dao.getEmployeeByName(name, (err, employee) => {
     if (!err && employee) {
-      res.json(employee);
+      res.json({ name: employee.name, role: employee.role });
     } else {
       console.error(`api, ${err}`);
       res.status(500).json({ error: err });
     }
   });
 });
+
+
+// New route to get employees by location
+app.get('/api/employees/location/:location', async function (req, res) {
+  dao.findEmployeesByLocation(req.params.location, (err, employees) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(employees);
+    }
+  });
+});
+
 
 app.use(express.static('./public'));
 

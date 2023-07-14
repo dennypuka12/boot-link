@@ -1,38 +1,37 @@
-import {useState} from "react";
-function Login(props) {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+import React from 'react';
 
-    function handleLogin(e) {
-        e.preventDefault()
-        // Code to handle login goes here
-        props.toggle()
-    }
+const Login = ({ onLogin }) => {
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
-    return (
-        <div className="popup">
-            <div className="popup-inner">
-                <h2>Login</h2>
-                <form onSubmit={handleLogin}>
-                    <label>
-                        Username:
-                        <input 
-                        type="text" 
-                        value={username} 
-                        onChange={e => setUsername(e.target.value)} />
-                    </label>
-                    <label>
-                        Password:
-                        <input 
-                        type="password" 
-                        value={password} 
-                        onChange={e => setPassword(e.target.value)} />
-                    </label>
-                    <button type="submit">Login</button>
-                </form>
-                <button onClick={props.toggle}>Close</button>
-            </div>
-        </div>
-    )
-}
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onLogin(username, password);
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Username:
+          <input type="text" value={username} onChange={handleUsernameChange} />
+        </label>
+        <label>
+          Password:
+          <input type="password" value={password} onChange={handlePasswordChange} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+  );
+};
+
 export default Login;

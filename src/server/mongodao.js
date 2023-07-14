@@ -70,3 +70,16 @@ module.exports.getEmployeeByName = async function (name, callback) {
     });
   };
   
+// retrieve by location
+
+module.exports.findEmployeesByLocation = async function (location, callback) {
+  var col = dbPool.collection('fakeEmployeesNew');
+  col.find({  workLocation: { $regex: new RegExp(location, 'i') } }).toArray(async(err, employees) => {
+    if (!err) {
+      console.log({employees});
+      callback(null, employees);
+    } else {
+      callback("Failed to find employees by location", undefined);
+    }    
+  });
+};

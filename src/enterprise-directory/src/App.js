@@ -1,47 +1,22 @@
-import {useEffect, useState} from "react";
-import axios from 'axios';
-import Table from "./Table.js"
-import SearchBar from "./searchBar.js";
-import Login from './login.js'
-import "./App.css"
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Header from './Header';
+import { HomePage } from './HomePage';
+import  AnalyticsPage  from './analytics';
+import  Login from './login';
+import 'simpledotcss';
 
-
-function App() {
-
-  const [data, setData] = useState([]);
-  const [searchResults, setSearchResults] = useState(null)
-  const [seen, setSeen] = useState(false);
-
-  useEffect(()=>{
-    const fetchData = async()=>{
-      try{
-        const res = await axios.get('api/employees');
-        setData(res.data.slice(0,5));
-      }catch (error){
-        console.error("Error fetching data from server:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  function togglePop(){
-    setSeen(!seen);
-  }
-
-  const handleSearch = (results) => {
-    setSearchResults([results]);
-  }
-
-  const tableData = searchResults ? searchResults : data;
-
+const App = () => {
   return (
-    <div className="App">
-      <button onClick={togglePop}>Login</button>
-      {seen? <Login toggle={togglePop}/> :null} 
-      <SearchBar onSearch={handleSearch}  />
-      <Table data={tableData} />
-    </div>
+    <Router>
+      <Header />
+    <Routes>
+      <Route path="/" exact element={<HomePage />} />
+      <Route path="/analytics" element={<AnalyticsPage />} />
+      <Route path="/login" element={<Login />} />
+    </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
