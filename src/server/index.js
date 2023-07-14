@@ -28,9 +28,22 @@ app.get("/api/employees/:name", (req, res) => {
   });
 
 app.get("/api/employees/salary/:salary", (req, res) => {
-  dao.findEmployeesWithSalaryHigherThan(+req.params.salary, (err, salary) => {
-    if (salary) {
-      res.send(salary);
+  const salary = Number(req.params.salary)
+  dao.findEmployeesWithSalaryHigherThan(salary, (err, employees) => {
+    if (employees) {
+      res.send(employees);
+    } else {
+      res.statusCode = 404;
+      res.end();
+    }
+  });
+});
+
+app.get("/api/employees/role/:role", (req, res) => {
+  console.log('inside role')
+  dao.findByRoles(req.params.role, (err, employee) => {
+    if (employee) {
+      res.send(employee);
     } else {
       res.statusCode = 404;
       res.end();
@@ -43,6 +56,7 @@ app.get("/api/employees/salary/:salary", (req, res) => {
 
 app.get('/api/login/:name', async (req, res) => {
   const name = req.params.name;
+  console.log(name);
   dao.getEmployeeByName(name, (err, employee) => {
     if (!err && employee) {
       res.json({ name: employee.name, role: employee.role });

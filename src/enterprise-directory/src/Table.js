@@ -17,7 +17,7 @@ const Table = ({ data, role }) => {
             {role && <td>{item.phoneNumber}</td>}  
             <td>{item.jobRole}</td>
             <td>{item.workLocation}</td>
-            {(role === 'Manager' || role === 'HR') && <td>{item.salary}</td>}  
+            {(role === 'Manager' || role === 'HR') && <td>${item.salary}</td>}  
           </tr>
         ))}
       </tbody>
