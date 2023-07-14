@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
 from sklearn.compose import make_column_transformer
 import seaborn as sns
+import os
 import joblib
 import pymongo
 
@@ -70,20 +71,29 @@ def predict_salary(jobRole, workLocation):
     mse = mean_squared_error(y_test, y_pred)
     rmse = np.sqrt(mse)
 
+    # Create and save plot
+    # plot_path = create_and_save_plot(y_test, y_pred)
+
     return {
         "predicted_salary": salary_prediction[0],
         "mae": mae,
         "mse": mse,
         "rmse": rmse,
+        "y_test": y_test,
+        "y_pred": y_pred,
     }
 
-def create_plots(y_test, y_pred):
+def create_and_save_plot(y_test, y_pred, plot_dir='plot'):
     # Scatter plot
     plt.scatter(y_test, y_pred)
     plt.xlabel('True Values')
     plt.ylabel('Predictions')
-    plt.savefig('scatter_plot.png')
 
-    # Residual plot
-    sns.residplot(y_test, y_pred, lowess=True, color="g")
-    plt.savefig('residuals_plot.png')
+    # Ensure the plot directory exists
+    os.makedirs(plot_dir, exist_ok=True)
+
+    # Save the plot to a PNG file
+    plot_path = os.path.join(plot_dir, 'scatter_plot.png')
+    plt.savefig(plot_path)
+
+    return plot_path

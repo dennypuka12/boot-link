@@ -95,3 +95,25 @@ module.exports.findByRoles = async function (role, callback) {
     }    
   });
 };
+
+module.exports.findAllJobRoles = async function (callback)  {
+  var col = dbPool.collection("fakeEmployeesNew");
+  col.distinct("jobRole", (err, jobRoles) => {
+    if (!err) {
+      callback(null, jobRoles);
+    } else {
+      callback("Failed to find job roles", undefined);
+    }
+  });
+};
+
+module.exports.findAllLocations = async function (callback)  {
+  var col = dbPool.collection("fakeEmployeesNew");
+  col.distinct("workLocation", (err, locations) => {
+    if (!err) {
+      callback(null, locations);
+    } else {
+      callback("Failed to find job roles", undefined);
+    }
+  });
+};

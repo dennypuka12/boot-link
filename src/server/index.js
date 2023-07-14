@@ -79,6 +79,30 @@ app.get('/api/employees/location/:location', async function (req, res) {
   });
 });
 
+// New endpoint to get all unique job roles
+app.get("/api/jobRoles", (req, res) => {
+  dao.findAllJobRoles((err, jobRoles) => {
+    if (jobRoles) {
+      res.send(jobRoles);
+    } else {
+      res.statusCode = 404;
+      res.end();
+    }
+  });
+});
+
+app.get("/api/locations", (req, res) => {
+  dao.findAllLocations((err, locations) => {
+    if (locations) {
+      res.send(locations);
+    } else {
+      res.statusCode = 404;
+      res.end();
+    }
+  });
+});
+
+
 
 app.use(express.static('./public'));
 
