@@ -13,19 +13,19 @@ const AnalyticsPage = () => {
   };
 
   return (
-    <div>
-      <h1>Salary Analysis</h1>
-      <select value={jobRole} onChange={e => setJobRole(e.target.value)}>
+    <div className='App'>
+      <h1 className='App-header'>Salary Analysis</h1>
+      <select className='center-analytics' value={jobRole} onChange={e => setJobRole(e.target.value)}>
         <option value="Company-wide">Company-wide</option>
         {/* Add more options as needed */}
       </select>
 
-      <select value={location} onChange={e => setLocation(e.target.value)}>
+      <select className='center-analytics' value={location} onChange={e => setLocation(e.target.value)}>
         <option value="Company-wide">Company-wide</option>
         {/* Add more options as needed */}
       </select>
 
-      <button onClick={handleAnalyze}>Analyze</button>
+      <button className='center-analytics' onClick={handleAnalyze}>Analyze</button>
 
       {results && (
         <div>

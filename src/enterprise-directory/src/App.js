@@ -5,16 +5,18 @@ import { HomePage } from './HomePage';
 import  AnalyticsPage  from './analytics';
 import  Login from './login';
 import 'simpledotcss';
+import './App.css';
+
 
 const App = () => {
   return (
     <Router>
-      <Header />
-    <Routes>
-      <Route path="/" exact element={<HomePage />} />
-      <Route path="/analytics" element={<AnalyticsPage />} />
-      <Route path="/login" element={<Login />} />
-    </Routes>
+      <Header />      
+        <Routes>
+          <Route path="/" exact element={<HomePage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
     </Router>
   );
 };
